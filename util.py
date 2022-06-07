@@ -51,3 +51,7 @@ def get_prev_iob_in_chunk(sentence, i, history):
         return history[-1]
     else:
         return "<START>"
+
+
+def get_word_length(sentence, i, history):
+    return len(sentence[i][0])

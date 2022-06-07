@@ -3,7 +3,8 @@ from util import (
     get_prev_word,
     get_prev_word_starts_capital,
     get_word,
-    get_prev_iob_in_chunk
+    get_prev_iob_in_chunk,
+    get_word_length
 )
 
 
@@ -48,4 +49,5 @@ def base_line_and_history(sentence, i, history):
     args = (sentence, i, history)
     features = base_line_features(*args)
     features["prev iob"] = get_prev_iob_in_chunk(*args)
+    features["word length"] = get_word_length(*args)
     return features
