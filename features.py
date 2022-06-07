@@ -1,7 +1,9 @@
 from util import (
     get_current_word_starts_capital,
     get_prev_word,
-    get_prev_word_starts_capital
+    get_prev_word_starts_capital,
+    get_word,
+    get_prev_iob_in_chunk
 )
 
 
@@ -24,16 +26,26 @@ def base_line_features(sentence, i, history):
     """
     args = (sentence, i, history)
 
-    word, pos = sentence[i]
+    word, pos = get_word(*args)
     word_capital = get_current_word_starts_capital(*args)
     prev_word, prev_pos = get_prev_word(*args)
     prev_starts_capital = get_prev_word_starts_capital(*args)
 
     return {
         "pos": pos,
-        "word": word.lower(),
+        "word": word,
         "word capital": word_capital,
         "prev word capital": prev_starts_capital,
         "prevpos": prev_pos,
-        "prev word": prev_word.lower()
+        "prev word": prev_word
     }
+
+
+def base_line_and_history(sentence, i, history):
+    """
+    Extracts base line feature, and adds last part of history.
+    """
+    args = (sentence, i, history)
+    features = base_line_features(*args)
+    features["prev iob"] = get_prev_iob_in_chunk(*args)
+    return features
