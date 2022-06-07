@@ -10,7 +10,7 @@ import sys
 from nltk.corpus import conll2002 as conll
 
 if len(sys.argv) < 2:
-    pickle_path = "best.pickle"
+    pickle_path = "base_line.pickle"
 else:
     pickle_path = sys.argv[1]
 
@@ -25,4 +25,4 @@ result = ner.parse_sents(tagzinnen)
 print("Evaluating on test set")
 # Usage 2: self-evaluate (on chunked sentences)
 chunkzinnen = conll.chunked_sents("ned.testa")
-print(ner.evaluate(chunkzinnen))
+print(ner.accuracy(chunkzinnen))

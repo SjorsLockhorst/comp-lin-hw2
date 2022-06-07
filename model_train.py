@@ -1,12 +1,22 @@
+import pickle
+
 from custom_chunker import ConsecutiveNPChunker
-from features import base_line_feature, test_features
+from features import base_line_features
 from nltk.corpus import conll2002 as conll
 
-training = conll.chunked_sents("ned.train")
-testing = conll.chunked_sents("ned.testa")
 
-my_recognizer = ConsecutiveNPChunker(base_line_feature, training)
+def train_model_with_feature_map(feature_map):
 
-my_recognizer.show_most_informative_features()
+    training = conll.chunked_sents("ned.train")
+    return ConsecutiveNPChunker(feature_map, training)
 
-print(my_recognizer.accuracy(testing))
+
+def pickle_model(model, pickle_path="./base_line.pickle"):
+    with open(pickle_path, "wb") as file:
+        pickle.dump(model, file)
+
+
+if __name__ == "__main__":
+    print("Training model with base line settings, saving to base_line.pickle")
+    model = train_model_with_feature_map(base_line_features)
+    pickle_model(model)

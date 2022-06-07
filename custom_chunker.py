@@ -140,11 +140,6 @@ class _ConsecutiveNPChunkTagger(nltk.TaggerI):
             "GIS"
         }
 
-        # TODO: store the feature_map parameter as self.feature_map
-        # TODO: call self.create_training_data on train_sents
-        # TODO: check that algorithm is one of "NaiveBayes", "DecisionTree", "IIS", and "GIS"
-        # and raise an error if it's not
-
         self.feature_map = feature_map
         self.train_set = self.create_training_data(train_sents)
         if algorithm not in ALLOWED_ALGOS:
@@ -184,20 +179,14 @@ class _ConsecutiveNPChunkTagger(nltk.TaggerI):
             calls self.reformat_corpus_for_tagger on training_sentences,
             and stores the training data as self.train_set
         """
-        # TODO reformat sentences to ((word, pos_tag), iob_tag) pairs
-
-        # TODO turn the sentences into appropriate training data by finding their features
-        # store them in self._train_set
-        # TODO reformat sentences to ((word, pos_tag), iob_tag) pairs
         formatted_train_sents = self.reformat_corpus_for_tagger(training_sentences)
 
-        # TODO turn the sentences into appropriate training data by finding their features
         train_set = []
 
         for tagged_sent in formatted_train_sents:
             untagged_sent = nltk.tag.untag(tagged_sent)
             history = []
-            for i, (word, tag) in enumerate(tagged_sent):
+            for i, (_, tag) in enumerate(tagged_sent):
                 feature_set = self.feature_map(untagged_sent, i, history)
                 train_set.append((feature_set, tag))
                 history.append(tag)

@@ -1,4 +1,8 @@
-from util import get_word_starts_capital
+from util import (
+    get_current_word_starts_capital,
+    get_prev_word,
+    get_prev_word_starts_capital
+)
 
 
 def test_features(sentence, i, history):
@@ -14,38 +18,9 @@ def test_features(sentence, i, history):
     }
 
 
-def get_prev_word(sentence, i, history):
-    if i - 1 > 0:
-        return sentence[i - 1]
-    else:
-        return ("", "<START>")
-
-
-def get_current_word_starts_capital(sentence, i, history, naive=True):
-    word, _ = sentence[i]
-    if naive:
-        return get_word_starts_capital(word)
-    if i == 0:
-        return False
-    else:
-        return get_word_starts_capital(word)
-
-
-def get_prev_word_starts_capital(sentence, i, history, naive=True):
-    word, _ = get_prev_word(sentence, i, history)
-    if naive:
-        return get_word_starts_capital(word)
-    else:
-        if i != 1:
-            return get_word_starts_capital(word)
-        else:
-            return False
-
-
-def base_line_feature(sentence, i, history):
+def base_line_features(sentence, i, history):
     """
-    Feature that extracts info about both the current,
-    previous and next word.
+    Extracts base line features from each word in a sentence.
     """
     args = (sentence, i, history)
 
