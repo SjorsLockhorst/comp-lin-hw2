@@ -6,9 +6,11 @@ from custom_chunker import ConsecutiveNPChunker
 from features import base_line_features, test_features, base_line_and_history
 
 
-def train_model_with_feature_map(feature_map):
-    training = conll.chunked_sents("ned.train")
-    return ConsecutiveNPChunker(feature_map, training)
+training = conll.chunked_sents("ned.train")
+
+
+def train_model_with_feature_map(feature_map, train_sents):
+    return ConsecutiveNPChunker(feature_map, train_sents)
 
 
 def pickle_model(model, pickle_path):
@@ -16,9 +18,9 @@ def pickle_model(model, pickle_path):
         pickle.dump(model, file)
 
 
-def train(pickle_path, feature_map):
+def train(pickle_path, feature_map, train_sents=training):
     print(f"Training model with {feature_map}, saving to {pickle_path}")
-    model = train_model_with_feature_map(feature_map)
+    model = train_model_with_feature_map(feature_map, train_sents=train_sents)
     pickle_model(model, pickle_path)
 
 

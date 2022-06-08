@@ -15,6 +15,18 @@ def get_prev_word(sentence, i, history, naive=True):
         return ("", "<START>")
 
 
+def get_next_word(sentence, i, history):
+    if i + 1 < len(sentence):
+        return get_word(sentence, i + 1, history)
+    else:
+        return ("", "<END>")
+
+
+def get_next_word_starts_capital(sentence, i, history):
+    word, _ = get_next_word(sentence, i, history)
+    return _get_word_starts_capital(word)
+
+
 def get_current_word_starts_capital(sentence, i, history, naive=True):
     word, _ = sentence[i]
     if naive:

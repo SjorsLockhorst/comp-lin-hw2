@@ -6,10 +6,10 @@ def load_model(pickle_path):
     return pickle.load(open(pickle_path, "rb"))
 
 
-def evaluate_model(pickle_path, test_sents):
+def evaluate_model(pickle_path, test_sents, n_most_informative=10):
     print(f"Evaluating base model, with file name {pickle_path}")
     model = load_model(pickle_path)
-    model.show_most_informative_features(1000)
+    model.show_most_informative_features(n_most_informative)
     print(model.accuracy(test_sents))
 
 
