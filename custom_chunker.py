@@ -141,7 +141,7 @@ class _ConsecutiveNPChunkTagger(nltk.TaggerI):
         }
 
         self.feature_map = feature_map
-        self.train_set = self.create_training_data(train_sents)
+        self.create_training_data(train_sents)
         if algorithm not in ALLOWED_ALGOS:
             raise ValueError(
                 f"Algorithm must be one of {ALLOWED_ALGOS}, not {algorithm}")
@@ -187,7 +187,7 @@ class _ConsecutiveNPChunkTagger(nltk.TaggerI):
                 train_set.append((feature_set, tag))
                 history.append(tag)
 
-        return train_set
+        self.train_set = train_set
 
     def tag(self, sentence):
         """
