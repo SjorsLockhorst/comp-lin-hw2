@@ -27,10 +27,6 @@ def _get_path(filename):
     return os.path.join(MODEL_DIR, filename)
 
 
-def train_model_with_feature_map(feature_map, train_sents):
-    return ConsecutiveNPChunker(feature_map, train_sents)
-
-
 def pickle_model(model, pickle_path):
     with open(pickle_path, "wb") as file:
         pickle.dump(model, file)
@@ -38,7 +34,7 @@ def pickle_model(model, pickle_path):
 
 def train(pickle_path, feature_map, train_sents=training):
     print(f"Training model with {feature_map}, saving to {pickle_path}")
-    model = train_model_with_feature_map(feature_map, train_sents=train_sents)
+    model = ConsecutiveNPChunker(feature_map, train_sents=train_sents)
     pickle_model(model, pickle_path)
 
 
