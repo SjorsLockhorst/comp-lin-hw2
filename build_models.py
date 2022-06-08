@@ -6,13 +6,16 @@ File that contains code that builds all models.
 Authors: Tijn, Gaby, Felix, Sjors
 """
 
+import sys
 import os
 import pickle
+import re
 
 from nltk.corpus import conll2002 as conll
 
 from custom_chunker import ConsecutiveNPChunker
 from features import base_line_features, test_features, base_line_and_history, testing_features
+import features
 
 
 training = conll.chunked_sents("ned.train")
@@ -54,4 +57,27 @@ if __name__ == "__main__":
         "base_and_history": base_line_and_history,
         "latest_test.pickle": testing_features
     }
-    train_all(MODELS)
+    # If run without CLI arguments, just build all models in MODELS
+    if len(sys.argv) == 1:
+        train_all(MODELS)
+    # If run with arguments, use first argument as pickle filename, and second as
+    # function name of feature map in feature.py. Then train only that model.
+    else:
+        pickle_filename = sys.argv[1]
+        if not re.match(r"^.*\.pickle$", pickle_filename):
+            pickle_filename = f"{pickle_filename}.pickle"
+        try:
+            feature_map_name = sys.argv[2]
+        except IndexError:
+            print("No feature map provided, so using base line as default")
+            feature_map = base_line_features
+        else:
+            try:
+                feature_map = getattr(features, feature_map_name)
+            except AttributeError:
+                raise ImportError(
+                    f"Canot import {feature_map_name} from features.py, are you sure it exists?")
+        model_map = {
+            pickle_filename: feature_map
+        }
+        train_all(model_map)
