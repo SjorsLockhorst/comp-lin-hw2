@@ -9,19 +9,19 @@ Authors: Gaby, Felix, Tijn, Sjors
 import pickle
 import re
 import os
-from typing import List, Set
+from typing import List
 
 from custom_types import TaggedWord
 
 from nltk.stem.snowball import DutchStemmer
 
 
-def _get_dutch_names():
-    MISC_DATA_DIR = "misc_data"
-    path = os.path.join(os.path.dirname(__file__), MISC_DATA_DIR, "dutch_names.pickle")
-    with open(path, "rb") as file:
-        dutch_names = pickle.load(file)
-    yield dutch_names
+MISC_DATA_DIR = "misc_data"
+path = os.path.join(os.path.dirname(__file__), MISC_DATA_DIR, "dutch_names.pickle")
+with open(path, "rb") as file:
+    dutch_names = pickle.load(file)
+
+# TODO: Add more features
 
 
 def _get_word_starts_capital(word: str) -> bool:
@@ -319,7 +319,7 @@ def get_word_is_dutch_name(
         sentence: List[TaggedWord],
         i: int,
         history: List[str],
-        names=_get_dutch_names()
+        names=dutch_names
 ) -> bool:
     """
     Check if word is in a set of Dutch names.
@@ -369,7 +369,7 @@ def get_word_contains_percentage(
         Wheter or not the word matches the regex.
     """
     word, _ = get_word(sentence, i, history)
-    return bool(re.match(r"([0-9]*[.,]?[0-9]*%?)|[Pp]ercentage|[Pp]rocent", word))
+    return bool(re.match(r"([0-9]*[.,]?[0-9]*%)|[Pp]ercentage|[Pp]rocent", word))
 
 
 def get_word_is_alpha(sentence: List[TaggedWord], i: int, history: List[str]) -> bool:
@@ -477,7 +477,12 @@ def get_prev_word_is_alpha(sentence: List[TaggedWord], i: int, history: List[str
     return _get_word_is_alpha(word)
 
 
-def get_word_stem(sentence: List[TaggedWord], i: int, history: List[str]) -> str:
+def get_word_stem(
+    sentence: List[TaggedWord],
+    i: int,
+    history: List[str],
+    stemmer=DutchStemmer()
+) -> str:
     """
     Use nltk.stem.snowball.DutchStemmer to stem current word.
 
@@ -496,5 +501,23 @@ def get_word_stem(sentence: List[TaggedWord], i: int, history: List[str]) -> str
         The stem of the current word
     """
     word, _ = get_word(sentence, i, history)
-    stemmer = DutchStemmer()
     return stemmer.stem(word)
+
+
+# TODO write docstrings for these
+def get_word_suffix(sentence: List[TaggedWord], i: int, history: List[str]) -> str:
+    word, _ = get_word(sentence, i, history)
+    stem = get_word_stem(sentence, i, history)
+    return re.sub(rf"{re.escape(stem)}", "", word.lower())
+
+
+def get_word_is_year(sentence: List[TaggedWord], i: int, history: List[str]) -> bool:
+    word, _ = sentence[i]
+    if _get_word_is_numeric(word):
+        return len(word) == 4
+    return False
+
+
+def get_word_is_date_format(sentence: List[TaggedWord], i: int, history: List[str]) -> bool:
+    word, _ = get_word(sentence, i, history)
+    return bool(re.match(r"([0-9]{2}(-|/)[0-9]{2}(-|/)[0-9]{4})", word))
