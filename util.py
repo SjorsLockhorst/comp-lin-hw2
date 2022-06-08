@@ -1,4 +1,10 @@
+import pickle
 import re
+import os
+
+path = os.path.join(os.path.dirname(__file__), "dutch_names.pickle")
+with open(path, "rb") as file:
+    dutch_names = pickle.load(file)
 
 
 def _get_word_starts_capital(word):
@@ -59,7 +65,7 @@ def get_word(sentence, i, history, naive=True):
 
 
 def get_prev_iob_in_chunk(sentence, i, history):
-    if history:
+    if history and i != 0:
         return history[-1]
     else:
         return "<START>"
@@ -67,3 +73,8 @@ def get_prev_iob_in_chunk(sentence, i, history):
 
 def get_word_length(sentence, i, history):
     return len(sentence[i][0])
+
+
+def get_word_is_dutch_name(sentence, i, history, names=dutch_names):
+    word, _ = get_word(sentence, i, history)
+    return word in names

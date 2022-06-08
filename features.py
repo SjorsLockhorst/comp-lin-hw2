@@ -6,7 +6,8 @@ from util import (
     get_prev_iob_in_chunk,
     get_word_length,
     get_next_word,
-    get_next_word_starts_capital
+    get_next_word_starts_capital,
+    get_word_is_dutch_name
 )
 
 
@@ -63,4 +64,12 @@ def base_line_and_next_word(sentence, i, history):
     next_word, next_tag = get_next_word(*args)
     features["next word"] = next_word
     features["next pos"] = next_tag
+    features["is dutch name"] = get_word_is_dutch_name(*args)
+    return features
+
+
+def base_line_and_dutch_names(sentence, i, history):
+    args = (sentence, i, history)
+    features = base_line_features(*args)
+    features["is dutch name"] = get_word_is_dutch_name(*args)
     return features
