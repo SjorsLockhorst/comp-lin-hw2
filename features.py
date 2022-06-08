@@ -4,10 +4,15 @@ from util import (
     get_prev_word_starts_capital,
     get_word,
     get_prev_iob_in_chunk,
-    get_word_length,
+    # get_word_length,
     get_next_word,
-    get_next_word_starts_capital,
-    get_word_is_dutch_name
+    # get_next_word_starts_capital,
+    get_word_is_dutch_name,
+    get_word_contains_percentage,
+    get_word_is_alpha,
+    get_word_is_numeric,
+    get_prev_word_is_numeric,
+    get_next_word_is_numeric
 )
 
 
@@ -68,8 +73,18 @@ def base_line_and_next_word(sentence, i, history):
     return features
 
 
-def base_line_and_dutch_names(sentence, i, history):
+def testing_features(sentence, i, history):
+    """Chunker features designed to test the Chunker class for correctness
+        - the POS tag of the word
+        - the entire history of IOB tags so far
+            formatted as a tuple because it needs to be hashable
+    """
     args = (sentence, i, history)
-    features = base_line_features(*args)
+    features = base_line_and_next_word(*args)
+    features["is alpha"] = get_word_is_alpha(*args)
+    features["is num"] = get_word_is_numeric(*args)
     features["is dutch name"] = get_word_is_dutch_name(*args)
+    features["word contains percentage"] = get_word_contains_percentage(*args)
+    features["prev word is numeric"] = get_prev_word_is_numeric(*args)
+    features["next word is numeric"] = get_next_word_is_numeric(*args)
     return features
