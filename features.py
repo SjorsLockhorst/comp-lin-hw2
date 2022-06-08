@@ -4,7 +4,7 @@ from util import (
     get_prev_word_starts_capital,
     get_word,
     get_prev_iob_in_chunk,
-    # get_word_length
+    get_word_length,
     get_next_word,
     get_next_word_starts_capital
 )
@@ -54,7 +54,7 @@ def base_line_and_history(sentence, i, history):
     return features
 
 
-def base_line_and_next(sentence, i, history):
+def base_line_and_next_word(sentence, i, history):
     """
     Extracts base line features, and adds next word characteristics.
     """
