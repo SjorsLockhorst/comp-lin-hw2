@@ -2,6 +2,8 @@ import pickle
 import re
 import os
 
+from nltk.stem.snowball import DutchStemmer
+
 path = os.path.join(os.path.dirname(__file__), "dutch_names.pickle")
 with open(path, "rb") as file:
     dutch_names = pickle.load(file)
@@ -116,3 +118,9 @@ def get_next_word_is_numeric(sentence, i, history):
 def get_prev_word_is_alpha(sentence, i, history):
     word, _ = get_prev_word(sentence, i, history)
     return _get_word_is_alpha(word)
+
+
+def get_word_stem(sentence, i, history):
+    word, _ = get_word(sentence, i, history)
+    stemmer = DutchStemmer()
+    return stemmer.stem(word)

@@ -12,7 +12,8 @@ from util import (
     get_word_is_alpha,
     get_word_is_numeric,
     get_prev_word_is_numeric,
-    get_next_word_is_numeric
+    get_next_word_is_numeric,
+    get_word_stem
 )
 
 
@@ -87,4 +88,5 @@ def testing_features(sentence, i, history):
     features["word contains percentage"] = get_word_contains_percentage(*args)
     features["prev word is numeric"] = get_prev_word_is_numeric(*args)
     features["next word is numeric"] = get_next_word_is_numeric(*args)
+    features["word stem"] = get_word_stem(*args)
     return features

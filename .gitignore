@@ -1,4 +1,3 @@
 .ipynb_checkpoints/
 setup.cfg
 __pycache__/
-*.pickle
