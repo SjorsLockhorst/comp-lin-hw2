@@ -5,7 +5,7 @@ from evaluate_models import evaluate_model
 from build_models import train
 from features import testing_features, base_line_features
 
-PATH = "./test.pickle"
+PATH = "./best.pickle"
 BASE_LINE = "./base_line.pickle"
 
 train_sents = conll.chunked_sents("ned.train")

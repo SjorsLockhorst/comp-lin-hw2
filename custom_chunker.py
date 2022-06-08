@@ -3,7 +3,7 @@ FILE: custom_chunker.py AS GIVEN IN ASSIGNMENT
 
 Based on code from http://www.nltk.org/book/ch07.html#code-classifier-chunker
 
-Authors: Alexis Dimitriadis, Meaghan Fowlie, and #TODO you!
+Authors: Alexis Dimitriadis, Meaghan Fowlie, Gaby, Sjors, Tijn, Felix
 
 Use ConsecutiveNPChunker to train and use a classifier
 
@@ -174,10 +174,6 @@ class _ConsecutiveNPChunkTagger(nltk.TaggerI):
 
         :param training_sentences: list of nltk.Trees with IOB tags
 
-        TODO make your function into a method that
-            uses the stored self.feature_map,
-            calls self.reformat_corpus_for_tagger on training_sentences,
-            and stores the training data as self.train_set
         """
         formatted_train_sents = self.reformat_corpus_for_tagger(training_sentences)
 

@@ -1,36 +1,56 @@
+"""
+FILE: evaluate_models.py
+
+File that evaluates all models.
+
+Authors: Felix, Tijn, Gaby and Sjors
+"""
+
+import os
+import re
 import pickle
 from nltk.corpus import conll2002 as conll
 
-
-def load_model(pickle_path):
-    return pickle.load(open(pickle_path, "rb"))
+from build_models import pickle_model
 
 
-def evaluate_model(pickle_path, test_sents, n_most_informative=10):
+MODEL_DIR = "models"
+
+
+def load_model(pickle_filename):
+    path = os.path.join(MODEL_DIR, pickle_filename)
+    return pickle.load(open(path, "rb"))
+
+
+def evaluate_model(pickle_path, test_sents):
     print(f"Evaluating base model, with file name {pickle_path}")
     model = load_model(pickle_path)
-    model.show_most_informative_features(n_most_informative)
-    print(model.accuracy(test_sents))
+    return model.accuracy(test_sents)
 
 
-def eval_base_model(test_sents):
-    FILENAME = "base_line.pickle"
-    evaluate_model(FILENAME, test_sents)
+def eval_all_models(test_sents):
+    model_files = os.listdir(MODEL_DIR)
+    pickle_files = [model_file for model_file in model_files if re.search(
+        r"^.*\.pickle$", model_file)]
+    best_f_measure = 0
+    best_model = None
+    best_file = None
+    for model_filename in pickle_files:
+        model = load_model(model_filename)
+        print(f"Evaluating {model_filename}")
+        accuracy = model.accuracy(test_sents)
+        print(accuracy)
+        f_measure = accuracy.f_measure()
+        if f_measure > best_f_measure:
+            print(f"Found new best model: {model_filename}")
+            best_f_measure = f_measure
+            best_model = model
+            best_file = model_filename
 
-
-def eval_test_model(test_sents):
-    FILENAME = "test.pickle"
-    evaluate_model(FILENAME, test_sents)
-
-
-def eval_base_and_history(test_sents):
-    FILENAME = "base_and_history.pickle"
-    evaluate_model(FILENAME, test_sents)
+    print(f"Writing {best_file} to ./best.pickle")
+    pickle_model(best_model, "./best.pickle")
 
 
 if __name__ == "__main__":
     test_sents = conll.chunked_sents("ned.testa")
-
-    eval_base_model(test_sents)
-    # eval_test_model(test_sents)
-    eval_base_and_history(test_sents)
+    eval_all_models(test_sents)

@@ -1,12 +1,19 @@
-from util import (
+"""
+FILE: features.py
+
+Authors: Tijn, Felix, Gaby and Sjors.
+
+File that contains all functions that extract feature sets from each word in a corpus.
+Each function takes sentence, i and history as arguments.
+"""
+
+from util import (  # Import individual features from util module
     get_current_word_starts_capital,
     get_prev_word,
     get_prev_word_starts_capital,
     get_word,
     get_prev_iob_in_chunk,
-    # get_word_length,
     get_next_word,
-    # get_next_word_starts_capital,
     get_word_is_dutch_name,
     get_word_contains_percentage,
     get_word_is_alpha,
