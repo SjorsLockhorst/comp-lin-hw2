@@ -37,6 +37,7 @@ def evaluate_model(pickle_path, test_sents: List[Tuple[TaggedWord, str]]) -> Chu
     """Load model from pickle path and evaluate it on test sentences."""
     print(f"Evaluating base model, with file name {pickle_path}")
     model = load_model(pickle_path)
+    print(model.show_most_informative_features(100))
     return model.accuracy(test_sents)
 
 

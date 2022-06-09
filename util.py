@@ -477,6 +477,59 @@ def get_prev_word_is_alpha(sentence: List[TaggedWord], i: int, history: List[str
     return _get_word_is_alpha(word)
 
 
+def get_day_of_week(sentence, i, history):
+    word, _ = get_word(sentence, i, history)
+    days_of_week = {
+        "maandag",
+        "dinsdag",
+        "woensdag",
+        "donderdag",
+        "vrijdag",
+        "zaterdag",
+        "zondag"
+    }
+    return word.lower() in days_of_week
+
+
+def get_month_of_year(sentence, i, history):
+    word, _ = get_word(sentence, i, history)
+    months_of_year = {
+        "januari",
+        "februari",
+        "maart",
+        "april",
+        "mei",
+        "juni",
+        "juli",
+        "augustus",
+        "september",
+        "october",
+        "november",
+        "december"
+    }
+    return word.lower() in months_of_year
+
+
+def get_acronym(sentence, i, history):
+    word, _ = get_word(sentence, i, history)
+    return bool(re.match(r"(?:[a-zA-Z]\.){2,}", word))
+
+
+def get_abbreviation(sentence, i, history):
+    word, _ = get_word(sentence, i, history)
+    return bool(re.match(r"\b(?:[a-z][A-Z][a-z]){2,}", word))
+
+
+def get_number(sentence, i, history):
+    word, _ = get_word(sentence, i, history)
+    return bool(word.isdigit())
+
+
+def get_money(sentence, i, history):
+    word, _ = get_word(sentence, i, history)
+    return bool(re.match(r"(\$|\€)\d+(?:\.\d+)?", word))
+
+
 def get_word_stem(
     sentence: List[TaggedWord],
     i: int,
@@ -521,3 +574,30 @@ def get_word_is_year(sentence: List[TaggedWord], i: int, history: List[str]) -> 
 def get_word_is_date_format(sentence: List[TaggedWord], i: int, history: List[str]) -> bool:
     word, _ = get_word(sentence, i, history)
     return bool(re.match(r"([0-9]{2}(-|/)[0-9]{2}(-|/)[0-9]{4})", word))
+
+
+def get_count_capital(sentence: List[TaggedWord], i: int, history: List[str]) -> int:
+    word, _ = get_word(sentence, i, history)
+    cap_count = 0
+    for letter in word:
+        if letter.isupper():
+            cap_count += 1
+
+    return cap_count
+
+
+def get_full_cap(sentence: List[TaggedWord], i: int, history: List[str]) -> bool:
+    word, _ = get_word(sentence, i, history)
+    return word.isupper()
+
+
+def get_vowels_count(sentence: List[TaggedWord], i: int, history: List[str]) -> int:
+    word, _ = get_word(sentence, i, history)
+    vowels = ['a', 'e', 'i', 'o', 'u']
+    vowel_count = 0
+
+    for letter in word:
+        if letter in vowels:
+            vowel_count += 1
+
+    return vowel_count

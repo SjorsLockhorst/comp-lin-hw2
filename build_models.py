@@ -16,7 +16,7 @@ from nltk.corpus import conll2002 as conll
 
 from custom_chunker import ConsecutiveNPChunker
 from custom_types import FeatureMap, TaggedWord
-from features import base_line_features, test_features, base_line_and_history, testing_features
+from features import base_line_features, test_features, base_line_and_history, sjors_final_test_features
 import features
 
 
@@ -71,7 +71,7 @@ if __name__ == "__main__":
         "base_test.pickle": test_features,
         "base_line.pickle": base_line_features,
         "base_and_history": base_line_and_history,
-        "latest_test.pickle": testing_features
+        "latest_test.pickle": sjors_final_test_features
     }
     # If run without CLI arguments, just build all models in MODELS
     if len(sys.argv) == 1:
