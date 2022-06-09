@@ -25,7 +25,7 @@ def test_features(sentence, i, history):
     }
 
 
-def base_line_features(*args, **kwargs):
+def base_line_features(*args):
     """
     Extracts base line features from each word in a sentence.
     """
@@ -44,21 +44,9 @@ def base_line_features(*args, **kwargs):
     }
 
 
-def abstract_features(*args, **kwargs):
-    """Chunker features designed to test the Chunker class for correctness
-        - the POS tag of the word
-        - the entire history of IOB tags so far
-            formatted as a tuple because it needs to be hashable
-    """
+def abstract_features(*args):
+    """Function that extract abstract features from word and surrounding words."""
     next_word, next_tag = util.get_next_word(*args, naive=False)
-    # two_words_next, two_words_next_tag = util.get_two_words_next(*args)
-
-    # features["prev word + word"] = (features["prev word"], features["word"])
-    # features["word + nextword"] = (features["word"], features["next word"])
-    # features["2 back + prev word"] = (two_words_back, features["prev word"])
-    # features["2 back pos + prev word pos"] = (two_words_back_tag, features["prevpos"])
-    # features["word suffix"] = util.get_word_suffix(*args)
-
     features = base_line_features(*args)
     features["next word"] = next_word
     features["next pos"] = next_tag
@@ -67,19 +55,29 @@ def abstract_features(*args, **kwargs):
     features["word stem"] = util.get_word_stem(*args)
     features["capital count"] = util.get_count_capital(*args)
     features["prefix"] = util.get_prefix(*args)
-    features["is acronym"] = util.get_acronym(*args)
-    features["is abbreviation"] = util.get_abbreviation(*args)
-    features["word contains percentage"] = util.get_word_contains_percentage(*args)
+    features["is date format"] = util.get_word_is_date_format(*args)
     return features
 
 
-def abstract_plus_specific(*args, **kwargs):
+def abscract_features_plus(*args):
+    """
+    Chunker features designed to test the Chunker class for correctness
+        - the POS tag of the word
+        - the entire history of IOB tags so far
+            formatted as a tuple because it needs to be hashable
+    """
     features = abstract_features(*args)
-    features["is money"] = util.get_money(*args)
-    features["is dutch name"] = util.get_word_is_dutch_name(*args)
-    features["word contains percentage"] = util.get_word_contains_percentage(*args)
-    features["is year"] = util.get_word_is_year(*args)
-    features["is date format"] = util.get_word_is_date_format(*args)
+    features["word shape"] = util.get_word_shape(*args)
     features["is acronym"] = util.get_acronym(*args)
     features["is abbreviation"] = util.get_abbreviation(*args)
+    features["word contains percentage"] = util.get_word_contains_percentage(*args)
+    features["is money"] = util.get_money(*args)
+    features["is dutch name"] = util.get_word_is_dutch_name(*args)
+    features["is year"] = util.get_word_is_year(*args)
+    return features
+
+
+def abscract_features_and_history(*args):
+    features = abscract_features_plus(*args)
+    features["prev history"] = util.get_prev_history(*args)
     return features

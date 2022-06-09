@@ -16,8 +16,7 @@ from nltk.corpus import conll2002 as conll
 
 from custom_chunker import ConsecutiveNPChunker
 from custom_types import FeatureMap, TaggedWord
-from features import base_line_features, abstract_features
-import features
+import features as ft
 
 
 training = conll.chunked_sents("ned.train")
@@ -28,9 +27,8 @@ MODEL_DIR = "models"
 # TODO: Expand docstrings
 # TODO: maybe print training time?
 
-def pickle_model(model: ConsecutiveNPChunker, pickle_filename: str):
+def pickle_model(model: ConsecutiveNPChunker, path: str):
     """Pickle a model to a path."""
-    path = os.path.join(MODEL_DIR, pickle_filename)
     with open(path, "wb") as file:
         pickle.dump(model, file)
 
@@ -53,7 +51,8 @@ def train(
         algorithm=algorithm,
         verbose=verbose
     )
-    pickle_model(model, pickle_path)
+    path = os.path.join(MODEL_DIR, pickle_path)
+    pickle_model(model, path)
 
 
 def train_all(model_mapper: Dict[str, FeatureMap]):
@@ -68,9 +67,10 @@ if __name__ == "__main__":
     if not os.path.exists(MODEL_DIR):
         os.mkdir(MODEL_DIR)
     MODEL_MAP = {
-        # "base_test.pickle": test_features,
-        # "base_line.pickle": base_line_features,
-        "latest_test.pickle": abstract_features
+        "base_line.pickle":  ft.base_line_features,
+        "abstract_features.pickle": ft.abstract_features,
+        "abstract_features_plus.pickle": ft.abscract_features_plus,
+        "abscract_features_plus_history.pickle": ft.abscract_features_and_history,
     }
     # If run without CLI arguments, just build all models in MODELS
     if len(sys.argv) == 1:
@@ -85,10 +85,10 @@ if __name__ == "__main__":
             feature_map_name = sys.argv[2]
         except IndexError:
             print("No feature map provided, so using base line as default")
-            feature_map = base_line_features
+            feature_map = ft.base_line_features
         else:
             try:
-                feature_map = getattr(features, feature_map_name)
+                feature_map = getattr(ft, feature_map_name)
             except AttributeError:
                 raise ImportError(
                     f"Canot import {feature_map_name} from features.py, are you sure it exists?")

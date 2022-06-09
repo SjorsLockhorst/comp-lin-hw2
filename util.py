@@ -9,7 +9,7 @@ Authors: Gaby, Felix, Tijn, Sjors
 import pickle
 import re
 import os
-from typing import List
+from typing import List, Tuple
 
 from custom_types import TaggedWord
 
@@ -665,3 +665,18 @@ def get_prefix(sentence: List[TaggedWord], i: int, history: List[str]) -> str:
             word_prefix = n
             break
     return word_prefix
+
+
+def get_prev_history(sentence: List[TaggedWord], i: int, history: List[str]):
+    if len(history) > 1:
+        return tuple(history[-2:])
+    return tuple()
+
+
+def get_word_shape(sentence: List[TaggedWord], i: int, history: List[str], naive=True):
+    def _wordshape(text):
+        t1 = re.sub('[A-Z]', 'X', text)
+        t2 = re.sub('[a-z]', 'x', t1)
+        return re.sub('[0-9]', 'd', t2)
+    word, _ = get_word(sentence, i, history)
+    return _wordshape(word)
