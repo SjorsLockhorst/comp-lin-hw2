@@ -39,9 +39,6 @@ class TestWordIsPercentage(unittest.TestCase):
         self.assertTrue(get_word_contains_percentage([("19.19%", "")], 0, []))
         self.assertTrue(get_word_contains_percentage([("19,19%", "")], 0, []))
         self.assertTrue(get_word_contains_percentage([("19%", "")], 0, []))
-        self.assertTrue(get_word_contains_percentage([("procent", "")], 0, []))
-        self.assertTrue(get_word_contains_percentage([("percentage", "")], 0, []))
-        self.assertTrue(get_word_contains_percentage([("percentage", "")], 0, []))
         self.assertTrue(get_word_contains_percentage([("%", "")], 0, []))
 
     def test_true_negatives(self):

@@ -15,7 +15,7 @@ if __name__ == "__main__":
     train_sents = conll.chunked_sents("ned.train")
     test_sents = conll.chunked_sents("ned.testa")
 
-    base_line_accuracy = evaluate_model(BASE_LINE_FILE, test_sents)
-    print(base_line_accuracy)
+    # base_line_accuracy = evaluate_model(BASE_LINE_FILE, test_sents)
+    # print(base_line_accuracy)
     tested_accuracy = evaluate_model(filename, test_sents)
     print(tested_accuracy)

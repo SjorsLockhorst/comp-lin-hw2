@@ -117,7 +117,7 @@ def get_word(sentence: List[TaggedWord], i: int, history: List[str], naive=True)
     return tagged_word
 
 
-def get_next_word(sentence: List[TaggedWord], i: int, history: List[str]):
+def get_next_word(sentence: List[TaggedWord], i: int, history: List[str], naive=True):
     """
     Get next tagged word in a sequence of tagged words.
 
@@ -140,10 +140,10 @@ def get_next_word(sentence: List[TaggedWord], i: int, history: List[str]):
     TaggedWord
         The next tagged word in the sentence.
     """
-    return get_word(sentence, i + 1, history)
+    return get_word(sentence, i + 1, history, naive=naive)
 
 
-def get_prev_word(sentence: List[TaggedWord], i: int, history: List[str]):
+def get_prev_word(sentence: List[TaggedWord], i: int, history: List[str], naive=True):
     """
     Get previous tagged word in a sequence of tagged words.
 
@@ -166,7 +166,59 @@ def get_prev_word(sentence: List[TaggedWord], i: int, history: List[str]):
     TaggedWord
         The previous tagged word in the sentence.
     """
-    return get_word(sentence, i - 1, history)
+    return get_word(sentence, i - 1, history, naive=naive)
+
+
+def get_two_words_back(sentence: List[TaggedWord], i: int, history: List[str], naive=True):
+    """
+    Get previous tagged word in a sequence of tagged words.
+
+    Parameters
+    ----------
+    sentence : List[TaggedWords]
+        List of TaggedWords, the sentence in which to look.
+    i : int
+        The position of the current word in the sentence.
+    history : List[str]
+        The IOB tags we have assigned to the whole corpus so far.
+    naive : bool
+        The naive approach is just to return the previous word as it is found in the
+        text. The non naive aproach is to make a word lower case if it happens to be the
+        first word. In this way, only words that contain a 'natural' upper case are
+        preserved.
+
+    Returns
+    -------
+    TaggedWord
+        The previous tagged word in the sentence.
+    """
+    return get_word(sentence, i - 2, history, naive=naive)
+
+
+def get_two_words_next(sentence: List[TaggedWord], i: int, history: List[str], naive=True):
+    """
+    Get previous tagged word in a sequence of tagged words.
+
+    Parameters
+    ----------
+    sentence : List[TaggedWords]
+        List of TaggedWords, the sentence in which to look.
+    i : int
+        The position of the current word in the sentence.
+    history : List[str]
+        The IOB tags we have assigned to the whole corpus so far.
+    naive : bool
+        The naive approach is just to return the previous word as it is found in the
+        text. The non naive aproach is to make a word lower case if it happens to be the
+        first word. In this way, only words that contain a 'natural' upper case are
+        preserved.
+
+    Returns
+    -------
+    TaggedWord
+        The previous tagged word in the sentence.
+    """
+    return get_word(sentence, i + 2, history, naive=naive)
 
 
 def get_next_word_starts_capital(
@@ -369,7 +421,7 @@ def get_word_contains_percentage(
         Wheter or not the word matches the regex.
     """
     word, _ = get_word(sentence, i, history)
-    return bool(re.match(r"([0-9]*[.,]?[0-9]*%)|[Pp]ercentage|[Pp]rocent", word))
+    return bool(re.match(r"[0-9]*[.,]?[0-9]*%", word))
 
 
 def get_word_is_alpha(sentence: List[TaggedWord], i: int, history: List[str]) -> bool:
@@ -527,7 +579,7 @@ def get_number(sentence, i, history):
 
 def get_money(sentence, i, history):
     word, _ = get_word(sentence, i, history)
-    return bool(re.match(r"(\$|\€)\d+(?:\.\d+)?", word))
+    return bool(re.match(r"((\$|\€)\d+(?:\.\d+)?)", word))
 
 
 def get_word_stem(
@@ -576,8 +628,8 @@ def get_word_is_date_format(sentence: List[TaggedWord], i: int, history: List[st
     return bool(re.match(r"([0-9]{2}(-|/)[0-9]{2}(-|/)[0-9]{4})", word))
 
 
-def get_count_capital(sentence: List[TaggedWord], i: int, history: List[str]) -> int:
-    word, _ = get_word(sentence, i, history)
+def get_count_capital(sentence: List[TaggedWord], i: int, history: List[str], naive=True) -> int:
+    word, _ = get_word(sentence, i, history, naive=naive)
     cap_count = 0
     for letter in word:
         if letter.isupper():
@@ -601,3 +653,15 @@ def get_vowels_count(sentence: List[TaggedWord], i: int, history: List[str]) -> 
             vowel_count += 1
 
     return vowel_count
+
+
+def get_prefix(sentence: List[TaggedWord], i: int, history: List[str]) -> str:
+    word_prefix = ''
+    prefix = {'be', 'ge', 'her', 'ont', 'ver', 'aarts',
+              'opper', 'super', 'hyper', 'ultra', 'vice', 'sub'}
+    word, _ = get_word(sentence, i, history)
+    for n in prefix:
+        if word.startswith(n):
+            word_prefix = n
+            break
+    return word_prefix
